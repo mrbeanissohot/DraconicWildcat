@@ -1,15 +1,4 @@
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
-
-]]--
-
-local v0=[==[
+local CONFIG = [==[
 {
   "replacement_rules": [
     { "name": "ar15-body", "replace_ids": [83884702080665], "mode": "local", "enabled": true, "url": "https://github.com/mrbeanissohot/DraconicWildcat/blob/main/roar.mesh" },
@@ -50,4 +39,314 @@ local v0=[==[
     { "name": "up mag remo", "replace_ids": [83070615292783], "mode": "id", "enabled": true }
   ]
 }
-]==];local v1=2;local v2={[95562281570535]=1.3};local v3={[13158330555]=2.5,[13158735106]=0.4};local v4="https://github.com/mrbeanissohot/DraconicWildcat/blob/main/dragon_scales_gen.png";local v5="AWildcat";local function v6(v39) return (v39:gsub("github%.com/([^/]+)/([^/]+)/blob/","raw.githubusercontent.com/%1/%2/"));end local function v7(v40) local v41=v40:match("([^/]+)$"):gsub("%%20","_");return v5   .. "/"   .. v41 ;end local function v8(v42,v43) if isfile(v43) then return true;end local v44,v45=pcall(function() return game:HttpGet(v6(v42));end);if ( not v44 or (type(v45)~="string") or ( #v45==0)) then warn("[Replacer] download failed: "   .. v42 );return false;end if (makefolder and isfolder and  not isfolder(v5)) then pcall(makefolder,v5);end return (pcall(writefile,v43,v45));end local v9=v7(v4);local function v10(v46) if (isfile and isfile(v46)) then return true;end if  not (writefile and bit32) then return false;end local v47,v48=512,32;local v49=v47/v48 ;local v50=v49/2 ;local v51=v49 * 0.62 ;local v52,v53=math.floor,math.sqrt;local function v54(v95,v96) local v97=v52((v96 + v51)/v50 );local v98=v52((v96-v51)/v50 );for v124=v97,v98, -1 do local v125=v124 * v50 ;local v126=(((v124%2)==1) and (v49/2)) or 0 ;local v127=v52(((v95-v126)/v49) + 0.5 );local v128=(v127 * v49) + v126 ;local v129,v130=v95-v128 ,v96-v125 ;local v131=v53((v129 * v129) + (v130 * v130) );if (v131<=v51) then local v167=v131/v51 ;if (v167>0.92) then return 150,105,20;end if (v167>0.8) then return 222,175,45;end local v168=v167/0.8 ;return v52(222 + ((95 -222) * v168) ),v52(48 + ((6 -48) * v168) ),v52(40 + ((10 -40) * v168) );end end return 70,5,8;end local v55,v56,v57={},1,0;for v99=0,v47-1  do local v100={0};local v101=1;for v132=0,v47-1  do local v133,v134,v135=v54(v132 + 0.5 ,v99 + 0.5 );v100[v101 + 1 ],v100[v101 + 2 ],v100[v101 + 3 ]=v133,v134,v135;v101=v101 + 3 ;end for v139=1,v101 do v56=(v56 + v100[v139])%65521 ;v57=(v57 + v56)%65521 ;end v55[ #v55 + 1 ]=string.char(table.unpack(v100));if ((v99%32)==31) then task.wait();end end local v58=table.concat(v55);local v59,v60,v61={},1, #v58;while v60<=v61  do local v103=v58:sub(v60,v60 + 65534 );local v104= #v103;local v105=(((v60 + 65534)>=v61) and 1) or 0 ;local v106=65535 -v104 ;v59[ #v59 + 1 ]=string.char(v105,v104%256 ,v52(v104/256 ),v106%256 ,v52(v106/256 ))   .. v103 ;v60=v60 + 65535 ;end local function v62(v108) return string.char(v52(v108/16777216 )%256 ,v52(v108/65536 )%256 ,v52(v108/256 )%256 ,v108%256 );end local v63="\120\1"   .. table.concat(v59)   .. v62((v57 * 65536) + v56 ) ;local v64={};for v109=0,255 do local v110=v109;for v140=1,8 do if (bit32.band(v110,1)==1) then v110=bit32.bxor(3988292384,bit32.rshift(v110,1));else v110=bit32.rshift(v110,1);end end v64[v109]=v110;end local function v65(v112) local v113=4294967295;for v141=1, #v112 do v113=bit32.bxor(v64[bit32.band(bit32.bxor(v113,v112:byte(v141)),255)],bit32.rshift(v113,8));end return bit32.bxor(v113,4294967295);end local function v66(v114,v115) return v62( #v115)   .. v114   .. v115   .. v62(v65(v114   .. v115 )) ;end local v67="\137PNG\r\n\26\n"   .. v66("IHDR",v62(v47)   .. v62(v47)   .. string.char(8,2,0,0,0) )   .. v66("IDAT",v63)   .. v66("IEND","") ;if (makefolder and isfolder and  not isfolder("AWildcat")) then pcall(makefolder,"AWildcat");end local v68=pcall(writefile,v46,v67);return v68;end if  not v8(v4,v9) then if  not v10(v9) then warn("[Replacer] could not download or generate texture");end end local v11=game:GetService("HttpService");local v12=game:GetService("AssetService");local v13=v11:JSONDecode(v0).replacement_rules;local v14,v15,v16={},{},{};local v17,v18,v19=0,0,0;local function v20(v69) return tonumber(tostring(v69):match("(%d+)"));end local function v21(v70) if v15[v70] then return v15[v70];end for v116=1,5 do if isfile(v70) then local v148,v149=pcall(getcustomasset,v70);if (v148 and v149) then v15[v70]=v149;return v149;end end task.wait(0.3);end return nil;end local function v22(v71) if (v71.mode=="local") then local v142=v7(v71.url);v8(v71.url,v142);local v143=v21(v142);if  not v143 then warn("[Replacer] failed to load: "   .. v71.url );end return v143;end if v71.with_id then return "rbxassetid://"   .. v71.with_id ;end return "";end local function v23(v72) if (v72.type=="group") then for v150,v151 in ipairs(v72.children or {} ) do v23(v151);end elseif v72.enabled then local v169=v22(v72);if (v169==nil) then v18+=1 return;end v17+=1 for v171,v172 in ipairs(v72.replace_ids) do local v173=v20(v172);if v173 then v14[v173]=v169;end end end end for v73,v74 in ipairs(v13) do v23(v74);end print(("[Replacer] rules registered: %d, skipped: %d"):format(v17,v18));local v24=v21(v9);if  not v24 then warn("[Replacer] texture not loaded: "   .. v9 );end local v25={MeshPart={"MeshId","TextureID"},SpecialMesh={"MeshId","TextureId"},Sound={"SoundId"},Decal={"Texture"},Texture={"Texture"},ImageLabel={"Image"},ImageButton={"Image"},SurfaceAppearance={"ColorMap","NormalMap","MetalnessMap","RoughnessMap"}};local v26=setmetatable({},{__mode="k"});local v27=setmetatable({},{__mode="k"});local v28=setmetatable({},{__mode="k"});local v29=setmetatable({},{__mode="k"});local function v30(v75,v76) local v77=v76 or v1 ;pcall(function() if v75:IsA("MeshPart") then local v152=v28[v75];if (v152 and ((v75.Size-v152).Magnitude<0.001)) then return;end local v153=v75.Size * v77 ;v75.Size=v153;v28[v75]=v153;elseif v75:IsA("SpecialMesh") then local v174=v28[v75];if (v174 and ((v75.Scale-v174).Magnitude<0.001)) then return;end local v175=v75.Scale * v77 ;v75.Scale=v175;v28[v75]=v175;end end);end local function v31(v78,v79) if  not v79 then return;end pcall(function() local v117=v29[v78];if  not v117 then v117={mult=v79,target=v78.Volume};v29[v78]=v117;v78:GetPropertyChangedSignal("Volume"):Connect(function() if (math.abs(v78.Volume-v117.target )>0.001) then v117.target=math.clamp(v78.Volume * v117.mult ,0,10);v78.Volume=v117.target;end end);end if ((math.abs(v78.Volume-v117.target )>0.001) or ((v117.target==v78.Volume) and  not v117.done)) then v117.target=math.clamp(v78.Volume * v79 ,0,10);v78.Volume=v117.target;v117.done=true;end end);end local function v32(v80) if  not v24 then return;end pcall(function() if v80:IsA("MeshPart") then v80.TextureID=v24;end if v80:IsA("SpecialMesh") then v80.TextureId=v24;end end);end local function v33(v81) v32(v81);for v118,v119 in ipairs(v81:GetChildren()) do if v119:IsA("SurfaceAppearance") then v119:Destroy();end end if  not v26[v81] then v26[v81]=true;v81.ChildAdded:Connect(function(v162) if v162:IsA("SurfaceAppearance") then task.defer(function() pcall(function() v162:Destroy();end);end);end end);local v145=(v81:IsA("MeshPart") and "TextureID") or "TextureId" ;pcall(function() v81:GetPropertyChangedSignal(v145):Connect(function() if (v24 and (v81[v145]~=v24)) then pcall(function() v81[v145]=v24;end);end end);end);end end local function v34(v82) pcall(function() if v82:IsA("MeshPart") then v82.Transparency=1;elseif v82:IsA("SpecialMesh") then v82.Scale=Vector3.new(0,0,0);end end);end local function v35(v83,v84) if v83:IsA("MeshPart") then local v146,v147=pcall(function() local v164=v16[v84];if  not v164 then v164=v12:CreateMeshPartAsync(v84);v16[v84]=v164;end v83:ApplyMesh(v164);end);if  not v146 then warn("[Replacer] ApplyMesh failed: "   .. tostring(v147) );pcall(function() v83.MeshId=v84;end);end else pcall(function() v83.MeshId=v84;end);end end local function v36(v85,v86) local v87,v88=pcall(function() return v85[v86];end);if  not v87 then return;end local v89=v20(v88);local v90=v89 and v14[v89] ;if (v90==nil) then return;end v19+=1 if (v19<=10) then print("[Replacer] swapped "   .. v85.ClassName   .. "."   .. v86   .. " ("   .. tostring(v89)   .. ")" );end if (v86=="MeshId") then if (v90=="") then v34(v85);else v35(v85,v90);v30(v85,v2[v89]);v33(v85);end else pcall(function() v85[v86]=v90;end);if (v86=="SoundId") then v31(v85,v3[v89]);end end end local function v37(v91) local v92=v25[v91.ClassName];if ( not v92 or v27[v91]) then return;end v27[v91]=true;for v120,v121 in ipairs(v92) do v36(v91,v121);pcall(function() v91:GetPropertyChangedSignal(v121):Connect(function() v36(v91,v121);end);end);end end local function v38() local v94=0;for v122,v123 in ipairs(game:GetDescendants()) do v37(v123);v94+=1 if ((v94%2000)==0) then task.wait();end end end v38();game.DescendantAdded:Connect(v37);task.spawn(function() while true do task.wait(5);v38();end end);print("[Replacer] loaded");
+]==]
+
+local SCALE = 2 -- size multiplier for replaced meshes (gun)
+
+-- per-mesh size overrides, keyed by the original asset ID
+local SCALE_BY_ID = {
+	[95562281570535] = 1.3, -- magazine
+}
+
+-- volume multipliers per replaced sound ID
+local VOLUME = {
+	[13158330555] = 2.5, -- reload (draload) louder
+	[13158735106] = 0.4, -- m4a1 dragon quieter
+}
+
+-- one texture per replaced mesh, keyed by the ORIGINAL mesh asset ID.
+-- meshes not listed here keep whatever texture the game gives them.
+local TEXTURE_URL_BY_ID = {
+	[83884702080665] = "https://github.com/mrbeanissohot/DraconicWildcat/blob/main/roar_texture_2048.png",     -- gun body
+	[95562281570535] = "https://github.com/mrbeanissohot/DraconicWildcat/blob/main/magazine_texture_2048.png", -- magazine
+}
+
+---------------------------------------------------------------------
+-- DOWNLOAD HELPERS: files are fetched from GitHub once and cached in
+-- your workspace (AWildcat folder), then loaded with getcustomasset
+---------------------------------------------------------------------
+local CACHE_DIR = "AWildcat"
+
+-- github "blob" page links -> raw file links
+local function toRaw(url)
+	return (url:gsub("github%.com/([^/]+)/([^/]+)/blob/", "raw.githubusercontent.com/%1/%2/"))
+end
+
+local function cachePathFor(url)
+	local name = url:match("([^/]+)$"):gsub("%%20", "_")
+	return CACHE_DIR .. "/" .. name
+end
+
+local function download(url, path)
+	if isfile(path) then return true end
+	local ok, body = pcall(function() return game:HttpGet(toRaw(url)) end)
+	if not ok or type(body) ~= "string" or #body == 0 then
+		warn("[Replacer] download failed: " .. url)
+		return false
+	end
+	if makefolder and isfolder and not isfolder(CACHE_DIR) then
+		pcall(makefolder, CACHE_DIR)
+	end
+	return (pcall(writefile, path, body))
+end
+
+---------------------------------------------------------------------
+
+local HttpService = game:GetService("HttpService")
+local AssetService = game:GetService("AssetService")
+local rules = HttpService:JSONDecode(CONFIG).replacement_rules
+local lookup, cache, meshCache = {}, {}, {}
+local registered, skipped, swapped = 0, 0, 0
+
+local function parseId(v)
+	return tonumber(tostring(v):match("(%d+)"))
+end
+
+-- retry: first load of a freshly written file can fail
+local function loadAsset(path)
+	if cache[path] then return cache[path] end
+	for _ = 1, 5 do
+		if isfile(path) then
+			local ok, asset = pcall(getcustomasset, path)
+			if ok and asset then
+				cache[path] = asset
+				return asset
+			end
+		end
+		task.wait(0.3)
+	end
+	return nil
+end
+
+-- download + load every per-mesh texture
+local TEXTURES = {} -- [original mesh id] = custom asset
+for id, url in pairs(TEXTURE_URL_BY_ID) do
+	local path = cachePathFor(url)
+	download(url, path)
+	local asset = loadAsset(path)
+	if asset then
+		TEXTURES[id] = asset
+	else
+		warn("[Replacer] texture not loaded: " .. url)
+	end
+end
+
+local function resolve(rule)
+	if rule.mode == "local" then
+		local path = cachePathFor(rule.url)
+		download(rule.url, path)
+		local asset = loadAsset(path)
+		if not asset then
+			warn("[Replacer] failed to load: " .. rule.url)
+		end
+		return asset
+	end
+	if rule.with_id then return "rbxassetid://" .. rule.with_id end
+	return ""
+end
+
+local function register(rule)
+	if rule.type == "group" then
+		for _, c in ipairs(rule.children or {}) do register(c) end
+	elseif rule.enabled then
+		local target = resolve(rule)
+		if target == nil then
+			skipped += 1
+			return
+		end
+		registered += 1
+		for _, id in ipairs(rule.replace_ids) do
+			local n = parseId(id)
+			if n then lookup[n] = target end
+		end
+	end
+end
+
+for _, r in ipairs(rules) do register(r) end
+print(("[Replacer] rules registered: %d, skipped: %d"):format(registered, skipped))
+
+local PROPS = {
+	MeshPart = { "MeshId", "TextureID" },
+	SpecialMesh = { "MeshId", "TextureId" },
+	Sound = { "SoundId" },
+	Decal = { "Texture" },
+	Texture = { "Texture" },
+	ImageLabel = { "Image" },
+	ImageButton = { "Image" },
+	SurfaceAppearance = { "ColorMap", "NormalMap", "MetalnessMap", "RoughnessMap" },
+}
+
+local watched = setmetatable({}, { __mode = "k" })
+local seen = setmetatable({}, { __mode = "k" })
+local lastScaled = setmetatable({}, { __mode = "k" })
+local volState = setmetatable({}, { __mode = "k" })
+local texFor = setmetatable({}, { __mode = "k" }) -- the texture each swapped mesh should keep
+
+-- multiply size by mult once (won't stack on re-applies)
+local function scaleMesh(inst, mult)
+	local m = mult or SCALE
+	pcall(function()
+		if inst:IsA("MeshPart") then
+			local last = lastScaled[inst]
+			if last and (inst.Size - last).Magnitude < 0.001 then return end
+			local target = inst.Size * m
+			inst.Size = target
+			lastScaled[inst] = target
+		elseif inst:IsA("SpecialMesh") then
+			local last = lastScaled[inst]
+			if last and (inst.Scale - last).Magnitude < 0.001 then return end
+			local target = inst.Scale * m
+			inst.Scale = target
+			lastScaled[inst] = target
+		end
+	end)
+end
+
+-- multiply a sound's volume (and keep it if the game changes it)
+local function applyVolume(inst, mult)
+	if not mult then return end
+	pcall(function()
+		local st = volState[inst]
+		if not st then
+			st = { mult = mult, target = inst.Volume }
+			volState[inst] = st
+			inst:GetPropertyChangedSignal("Volume"):Connect(function()
+				if math.abs(inst.Volume - st.target) > 0.001 then
+					st.target = math.clamp(inst.Volume * st.mult, 0, 10)
+					inst.Volume = st.target
+				end
+			end)
+		end
+		if math.abs(inst.Volume - st.target) > 0.001 or st.target == inst.Volume and not st.done then
+			st.target = math.clamp(inst.Volume * mult, 0, 10)
+			inst.Volume = st.target
+			st.done = true
+		end
+	end)
+end
+
+local function setTexture(inst, tex)
+	if not tex then return end
+	pcall(function()
+		if inst:IsA("MeshPart") then inst.TextureID = tex end
+		if inst:IsA("SpecialMesh") then inst.TextureId = tex end
+	end)
+end
+
+-- put this mesh's own texture on it and keep it there
+local function applyTexture(inst, tex)
+	if not tex then return end
+	texFor[inst] = tex
+	setTexture(inst, tex)
+	for _, c in ipairs(inst:GetChildren()) do
+		if c:IsA("SurfaceAppearance") then c:Destroy() end
+	end
+	if not watched[inst] then
+		watched[inst] = true
+		inst.ChildAdded:Connect(function(c)
+			if c:IsA("SurfaceAppearance") then
+				task.defer(function() pcall(function() c:Destroy() end) end)
+			end
+		end)
+		local prop = inst:IsA("MeshPart") and "TextureID" or "TextureId"
+		pcall(function()
+			inst:GetPropertyChangedSignal(prop):Connect(function()
+				local want = texFor[inst]
+				if want and inst[prop] ~= want then
+					pcall(function() inst[prop] = want end)
+				end
+			end)
+		end)
+	end
+end
+
+local function hideMesh(inst)
+	pcall(function()
+		if inst:IsA("MeshPart") then
+			inst.Transparency = 1
+		elseif inst:IsA("SpecialMesh") then
+			inst.Scale = Vector3.new(0, 0, 0)
+		end
+	end)
+end
+
+local function applyMesh(inst, asset)
+	if inst:IsA("MeshPart") then
+		local ok, err = pcall(function()
+			local mp = meshCache[asset]
+			if not mp then
+				mp = AssetService:CreateMeshPartAsync(asset)
+				meshCache[asset] = mp
+			end
+			inst:ApplyMesh(mp)
+		end)
+		if not ok then
+			warn("[Replacer] ApplyMesh failed: " .. tostring(err))
+			pcall(function() inst.MeshId = asset end)
+		end
+	else
+		pcall(function() inst.MeshId = asset end)
+	end
+end
+
+local function handle(inst, p)
+	local ok, cur = pcall(function() return inst[p] end)
+	if not ok then return end
+	local id = parseId(cur)
+	local new = id and lookup[id]
+	if new == nil then return end
+
+	swapped += 1
+	if swapped <= 10 then
+		print("[Replacer] swapped " .. inst.ClassName .. "." .. p .. " (" .. tostring(id) .. ")")
+	end
+
+	if p == "MeshId" then
+		if new == "" then
+			hideMesh(inst) -- removal: hide instead of blanking
+		else
+			applyMesh(inst, new)
+			scaleMesh(inst, SCALE_BY_ID[id])
+			applyTexture(inst, TEXTURES[id]) -- only meshes with their own texture entry
+		end
+	else
+		pcall(function() inst[p] = new end)
+		if p == "SoundId" then applyVolume(inst, VOLUME[id]) end
+	end
+end
+
+local function apply(inst)
+	local props = PROPS[inst.ClassName]
+	if not props or seen[inst] then return end
+	seen[inst] = true
+	for _, p in ipairs(props) do
+		handle(inst, p)
+		pcall(function()
+			inst:GetPropertyChangedSignal(p):Connect(function()
+				handle(inst, p)
+			end)
+		end)
+	end
+end
+
+local function scan()
+	local n = 0
+	for _, d in ipairs(game:GetDescendants()) do
+		apply(d)
+		n += 1
+		if n % 2000 == 0 then task.wait() end
+	end
+end
+
+scan()
+game.DescendantAdded:Connect(apply)
+
+-- catch parts that load late
+task.spawn(function()
+	while true do
+		task.wait(5)
+		scan()
+	end
+end)
+
+print("[Replacer] loaded")
