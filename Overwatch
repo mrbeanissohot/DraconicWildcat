@@ -1,0 +1,110 @@
+
+-- Nearby Death Sound - LocalScript
+-- Place in StarterPlayer > StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local SoundService = game:GetService("SoundService")
+local Debris = game:GetService("Debris")
+
+local LOCAL_PLAYER = Players.LocalPlayer
+
+-- SETTINGS
+local SOUND_ID = "rbxassetid://79327164938465"
+local RANGE = 1000
+local VOLUME = 2
+
+local watched = {}
+
+local function getRoot(model)
+    return model:FindFirstChild("HumanoidRootPart")
+        or model:FindFirstChild("UpperTorso")
+        or model:FindFirstChild("Torso")
+end
+
+local function playSound()
+    local sound = Instance.new("Sound")
+    sound.Name = "NearbyDeathSound"
+    sound.SoundId = SOUND_ID
+    sound.Volume = VOLUME
+    sound.Looped = false
+    sound.Parent = SoundService
+
+    sound.Ended:Connect(function()
+        sound:Destroy()
+    end)
+
+    -- Failsafe cleanup; does not normally interrupt playback.
+    Debris:AddItem(sound, 600)
+    sound:Play()
+end
+
+local function watchModel(model)
+    if not model:IsA("Model") then
+        return
+    end
+
+    local humanoid = model:FindFirstChildOfClass("Humanoid")
+    if not humanoid or watched[humanoid] then
+        return
+    end
+
+    watched[humanoid] = true
+
+    humanoid.Died:Connect(function()
+        -- Ignore your own death.
+        if model == LOCAL_PLAYER.Character then
+            return
+        end
+
+        local deadRoot = getRoot(model)
+        if not deadRoot then
+            return
+        end
+
+        local myCharacter = LOCAL_PLAYER.Character
+        local myRoot = myCharacter and getRoot(myCharacter)
+
+        if not myRoot then
+            return
+        end
+
+        local distance = (myRoot.Position - deadRoot.Position).Magnitude
+
+        if distance <= RANGE then
+            playSound()
+        end
+    end)
+end
+
+-- Watch existing NPCs and player characters.
+for _, instance in ipairs(Workspace:GetDescendants()) do
+    if instance:IsA("Humanoid") and instance.Parent then
+        watchModel(instance.Parent)
+    end
+end
+
+-- Watch newly added humanoids.
+Workspace.DescendantAdded:Connect(function(instance)
+    if instance:IsA("Humanoid") and instance.Parent then
+        watchModel(instance.Parent)
+    end
+end)
+
+-- Watch players and their respawns.
+local function setupPlayer(player)
+    player.CharacterAdded:Connect(function(character)
+        task.wait(0.2)
+        watchModel(character)
+    end)
+
+    if player.Character then
+        watchModel(player.Character)
+    end
+end
+
+Players.PlayerAdded:Connect(setupPlayer)
+
+for _, player in ipairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
