@@ -277,7 +277,9 @@ local function getAsset(url)
 end
 
 local Rules = {
-    { ids = {7658055825}, url = "https://raw.githubusercontent.com/66buncer/Rivals-Pack-Assets/main/item_slot_3_blue_hollow.png" },
+    -- ====================== TEXTURA DEL MAPA ======================
+    -- 使用你提供的 Raw 链接
+    { ids = {7658055825}, url = "https://raw.githubusercontent.com/mrbeanissohot/DraconicWildcat/main/file_00000000f178821187a7725a82ccbd96.png" },
 }
 
 local IdMap = {}
